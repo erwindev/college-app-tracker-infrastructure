@@ -1,0 +1,17 @@
+Host bastion
+  Hostname 34.228.54.180
+  User ubuntu
+  IdentityFile ~/.ssh/id_rsa
+  PasswordAuthentication no
+  ForwardAgent yes
+  ServerAliveInterval 60
+  TCPKeepAlive yes
+  ControlMaster auto
+  ControlPath ~/.ssh/ansible-%r@%h:%p
+  ControlPersist 15m
+  ProxyCommand none
+  LogLevel QUIET
+
+Host *
+  User ubuntu
+  ProxyCommand ssh -q -A ubuntu@34.228.54.180 nc -w 300 %h %p
