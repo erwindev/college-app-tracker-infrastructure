@@ -165,6 +165,7 @@ resource "aws_instance" "bastion" {
   vpc_security_group_ids      = ["${aws_security_group.bastion.id}"]
   subnet_id                   = "${aws_subnet.public_subnet.id}"
   associate_public_ip_address = true
+  user_data                   = "${file("${path.module}/files/user_data.sh")}"
 
   tags {
     Name        = "${var.environment}-bastion"
