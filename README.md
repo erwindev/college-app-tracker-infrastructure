@@ -20,3 +20,5 @@ Please note that Amazon will charge for all the resources you are using.  In ord
 ```
 $ open "http://$(terraform elb_hostname)"
 ```
+
+https://thecode.pub/creating-your-cloud-servers-with-terraform-bfa01a499bad
