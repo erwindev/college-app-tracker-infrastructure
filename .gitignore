@@ -5,3 +5,4 @@
 *_key.pub
 env.sh
 .DS_Store
+*.retry
