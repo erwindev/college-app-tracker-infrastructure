@@ -3,4 +3,5 @@
 *.tfstate.backup
 *_key
 *_key.pub
-aws.sh
+env.sh
+.DS_Store
