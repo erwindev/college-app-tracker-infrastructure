@@ -31,7 +31,7 @@ In order to access your instances you will need to SSH to the bastion server.  F
 ```
 $ chmod 400 dev_key.pub
 ```
-2. Add the your key to the list of maintained by ssh-agent.
+2. Add the your key to the list keys of maintained by ssh-agent.
 ```
 $ ssh-add -K dev_key
 ```
