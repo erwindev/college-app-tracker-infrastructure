@@ -6,8 +6,8 @@ This project contains the Terraform scripts to setup the infrastructure needed t
 1. Install terraform
 2. Add your AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in your environment variables.
 ```
-export AWS_ACCESS_KEY_ID="AKIAIW3EM34DFUH35OOA"
-export AWS_SECRET_ACCESS_KEY="l0VQISbewlXALKlJh/6DBBmiKFnZRll9nVzpx3RK"
+export AWS_ACCESS_KEY_ID="aws_access_key"
+export AWS_SECRET_ACCESS_KEY="aws_secret_key"
 ```
 3. If you are using modules, make sure to invoke `$ terraform get`.
 4. Go to `dev` folder.
