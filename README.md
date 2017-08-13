@@ -1,6 +1,10 @@
 # College ETL Application Environment Setup
 
-This project contains the Terraform scripts to setup the infrastructure needed to run the College ETL Application.
+This project contains the Terraform scripts to setup the infrastructure needed to run the College ETL Application.  We will build the following server infrastructure.
+
+![Infrastructure](infrastructure.png)
+
+The server infrastructure environment will run in a Virtual Private Cloud (VPC).  The VPC consists of two subnets, private and public.  The private subnet will contain two servers that are not accessible out to the internet.  The public subnet will contain an Elastic Load Balancer (ELB) that acts a load balancer to the two servers running in the private subnet.  Additionally, a bastion server is spun up in the public subnet.  The bastion server will provide SSH access to the servers running in the private subnet.
 
 ## Pre-requisites
 1. Signup for an AWS Account
