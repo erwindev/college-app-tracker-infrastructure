@@ -1,0 +1,5 @@
+---
+- include: update_upgrade.yml
+- include: install_jdk.yml
+- include: install_docker.yml
+- include: install_git.yml

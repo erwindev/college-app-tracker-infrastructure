@@ -1,0 +1,30 @@
+---
+- name: Install Java
+  hosts: web_servers
+  remote_user: ubuntu
+  tasks:    
+    - name: Ensure repository key is installed
+      apt_key:
+        id: "58118E89F3A912897C070ADBF76221572C52609D"
+        keyserver: "hkp://p80.pool.sks-keyservers.net:80"
+        state: present
+      become: yes
+        
+    - name: Ensure docker repo is available
+      # For Ubuntu 16.04 LTS, use this repo instead:
+      apt_repository: 
+        repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ansible_lsb.codename}} stable'
+        state: present
+      become: yes
+
+    - name: Ensure JDK repo is available
+      apt_repository: 
+        repo: 'ppa:openjdk-r/ppa' 
+        state: present
+      become: yes
+
+    - name: Install JDK
+      apt: name={{item}} state=present
+      become: yes
+      with_items:
+        - openjdk-8-jdk
