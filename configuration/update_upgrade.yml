@@ -1,9 +1,0 @@
----
-- name: Install Packages
-  hosts: web_servers
-  remote_user: ubuntu
-  tasks:    
-    - name: Update and upgrade apt packages
-      apt:
-        upgrade: dist
-      become: yes

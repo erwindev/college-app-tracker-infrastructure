@@ -31,3 +31,16 @@ module "web" {
   vpc_id              = "${module.vpc.vpc_id}"
   vpc_cidr_block      = "${var.vpc_cidr}"
 }
+
+module "ci" {
+  source              = "../modules/services/ci"
+  region              = "${var.region}"
+  instance_type       = "t2.small"
+  private_subnet_id   = "${module.vpc.private_subnet_id}"
+  public_subnet_id    = "${module.vpc.public_subnet_id}"
+  vpc_sg_id           = "${module.vpc.default_sg_id}"
+  key_name            = "${var.key_name}"
+  environment         = "${var.environment}"
+  vpc_id              = "${module.vpc.vpc_id}"
+  vpc_cidr_block      = "${var.vpc_cidr}"
+}

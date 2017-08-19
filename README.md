@@ -92,4 +92,4 @@ control_path = ~/.ssh/mux-%r@%h:%p
 4. Run the test_connection playbook.  
 `$ ansible-playbook -i inventory test_connection.yml`
 5. Install packages
-`$ ansible-playbook -i inventory install_packages.yml`
+`$ ansible-playbook -i inventory main.yml`

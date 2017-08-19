@@ -1,0 +1,20 @@
+---
+- name: Add Jenkins key
+  apt_key: 
+    url: https://pkg.jenkins.io/debian/jenkins-ci.org.key
+    state: present  
+
+- name: Ensure Jenkins repo is available
+  apt_repository: 
+    repo: 'deb http://pkg.jenkins.io/debian-stable binary/'
+    state: present  
+
+- name: Install Jenkins
+  apt: name={{item}} state=present
+  with_items:
+    - jenkins
+
+- name: Add jenkins to group sudo
+  user: name='jenkins'
+        groups=docker
+        append=yes     

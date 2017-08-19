@@ -18,6 +18,14 @@ variable "private_subnet_id" {
   description = "The id of the private subnet to launch the instances"
 }
 
+variable "vpc_sg_id" {
+  description = "The default security group from the vpc"
+}
+
+variable "public_subnet_id" {
+  description = "The id of the public subnet to launch the load balancer"
+}
+
 variable "vpc_cidr_block" {
   description = "The CIDR block from the VPC"
 }

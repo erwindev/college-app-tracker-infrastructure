@@ -1,0 +1,11 @@
+---
+- name: Setup Web Servers
+  hosts: web_servers
+  remote_user: ubuntu
+  become: yes
+  
+  roles:
+    - base
+    - git
+    - jdk
+    - docker

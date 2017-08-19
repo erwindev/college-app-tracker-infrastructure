@@ -1,0 +1,12 @@
+---
+- name: Setup CI Servers
+  hosts: ci_servers
+  remote_user: ubuntu
+  become: yes
+  
+  roles:
+    - base
+    - jdk
+    - docker
+    - jenkins
+    - git
