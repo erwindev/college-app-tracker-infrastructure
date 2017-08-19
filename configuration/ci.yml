@@ -7,7 +7,7 @@
   roles:
     - base
     - jdk
+    - docker    
     - jenkins    
-    - docker
     - git
     - restart

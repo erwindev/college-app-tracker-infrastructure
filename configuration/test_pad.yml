@@ -1,0 +1,9 @@
+---
+- name: Test Connection
+  hosts: swarm-nodes:swarm_leader
+  gather_facts: false
+  tasks:
+    - name: test this
+      debug: 
+        msg: "host is {{item}}"
+      with_items:  "{{ groups['swarm_leader'] }}"

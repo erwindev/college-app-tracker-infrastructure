@@ -47,7 +47,7 @@ resource "aws_security_group" "ci_sg" {
 
 resource "aws_security_group" "ci_inbound_sg" {
   name        = "${var.environment}-ci-inbound-sg"
-  description = "Allow HTTP from Anywhere"
+  description = "Allow HTTP and ssh from Anywhere"
   vpc_id      = "${var.vpc_id}"
 
   ingress {
@@ -63,6 +63,13 @@ resource "aws_security_group" "ci_inbound_sg" {
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }  
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
   ingress {
     from_port   = 8
