@@ -45,3 +45,11 @@ variable "environment" {
 variable "vpc_id" {
   description = "The id of the vpc"
 }
+
+variable "public_subdomain" {
+  description = "Public subdomain"
+}
+
+variable "root_domain" {
+    description = "Root domain"
+}

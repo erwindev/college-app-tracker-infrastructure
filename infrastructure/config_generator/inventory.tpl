@@ -1,15 +1,14 @@
 [bastion]
-34.228.199.63
+$bastion
 
 [web_servers]
-10.0.2.160
-10.0.2.227
+$web_servers
 
 [ci_servers]
-10.0.2.57
+$ci_servers
 
 [swarm_leader]
-10.0.2.160
+$swarm_leader
 
 [swarm_node]
-10.0.2.227
+$swarm_node

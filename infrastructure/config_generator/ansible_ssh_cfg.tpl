@@ -1,5 +1,5 @@
 Host 10.0.2.*
-  ProxyCommand    ssh -W %h:%p ubuntu@34.228.199.63
+  ProxyCommand    ssh -W %h:%p ubuntu@$bastion
 
 Host *
   ControlMaster   auto

@@ -1,11 +1,14 @@
 ---
 - name: Setup CI Servers
   hosts: ci_servers
+  vars: 
+    nodejs_version: 8.x
   remote_user: ubuntu
   become: yes
   
   roles:
     - base
+    - node    
     - jdk
     - docker    
     - jenkins    

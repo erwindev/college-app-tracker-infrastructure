@@ -65,13 +65,6 @@ resource "aws_security_group" "ci_inbound_sg" {
   }  
 
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  ingress {
     from_port   = 8
     to_port     = 0
     protocol    = "icmp"
@@ -121,11 +114,11 @@ resource "aws_elb" "ci" {
   instances = ["${aws_instance.ci.id}"]
 
   health_check {
-    healthy_threshold   = 2
-    unhealthy_threshold = 2
-    timeout             = 3
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+    timeout             = 5
     target              = "TCP:8080"
-    interval            = 30
+    interval            = 10
   }  
 
   tags {

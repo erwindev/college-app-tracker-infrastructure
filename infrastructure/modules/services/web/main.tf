@@ -19,6 +19,13 @@ resource "aws_security_group" "web_server_sg" {
   }
 
   ingress {
+    from_port = 8080
+    to_port   = 8080
+    protocol  = "tcp"
+    cidr_blocks = ["${var.vpc_cidr_block}"]
+  }  
+
+  ingress {
     from_port = 443
     to_port   = 443
     protocol  = "tcp"
@@ -46,9 +53,23 @@ resource "aws_security_group" "web_server_sg" {
   ingress {
     from_port   = 4789
     to_port     = 4789
-    protocol    = "tcp"
+    protocol    = "udp"
     cidr_blocks = ["0.0.0.0/0"]
   }   
+
+  ingress {
+    from_port   = 9000
+    to_port     = 9000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }    
+
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }      
 
   egress {
     from_port   = 0
@@ -83,11 +104,32 @@ resource "aws_security_group" "web_inbound_sg" {
   }
 
   ingress {
+    from_port = 8080
+    to_port   = 8080
+    protocol  = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }    
+
+  ingress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
-  }  
+  }     
+
+  ingress {
+    from_port   = 9000
+    to_port     = 9000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }    
+
+  ingress {
+    from_port   = 9090
+    to_port     = 9090
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }     
 
   ingress {
     from_port   = 8
@@ -137,9 +179,92 @@ resource "aws_elb" "web" {
     lb_port           = 80
     lb_protocol       = "http"
   }
+
+  listener {
+    instance_port     = 8080
+    instance_protocol = "http"
+    lb_port           = 8080
+    lb_protocol       = "http"
+  }
+
   instances = ["${aws_instance.web.*.id}"]
+
+  health_check {
+    healthy_threshold   = 3
+    unhealthy_threshold = 3
+    timeout             = 5
+    target              = "TCP:8080"
+    interval            = 10
+  }    
 
   tags {
     Environment = "${var.environment}"
   }
+}
+
+/* College App Tracker Web Site Bucket */
+resource "aws_s3_bucket" "college-app-tracker-site" {
+  bucket = "${var.public_subdomain}.${var.root_domain}"
+
+  website {
+    index_document = "index.html"
+    error_document = "error.html"
+  }
+}
+
+/* College App Tracker CloudFront */
+resource "aws_cloudfront_distribution" "college-app-tracker-distribution" {
+    origin {
+        custom_origin_config {
+            http_port = 80,
+            https_port = 443,
+            origin_protocol_policy = "http-only",
+            origin_ssl_protocols = ["SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"]
+        }
+        domain_name = "${aws_s3_bucket.college-app-tracker-site.bucket_domain_name}"
+        origin_id   = "${aws_s3_bucket.college-app-tracker-site.id}"
+    }
+
+    enabled = true
+    default_root_object = "index.html"
+    aliases = ["${var.public_subdomain}.${var.root_domain}"]
+
+    custom_error_response {
+       error_code         = 404
+       response_code      = 200
+       response_page_path = "/404.html"
+    }
+
+    http_version = "http2"
+
+    default_cache_behavior {
+        allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+        cached_methods   = ["GET", "HEAD"]
+        target_origin_id = "${aws_s3_bucket.college-app-tracker-site.id}"
+
+        forwarded_values {
+          query_string = false
+
+          cookies {
+            forward = "none"
+          }
+        }
+
+        viewer_protocol_policy = "allow-all"
+        min_ttl                = 0
+        default_ttl            = 3600
+        max_ttl                = 86400
+    }
+
+    price_class = "PriceClass_All"
+
+    restrictions {
+        geo_restriction {
+            restriction_type = "none"
+        }
+    }
+
+    viewer_certificate {
+        cloudfront_default_certificate = true
+    }
 }

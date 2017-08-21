@@ -22,7 +22,7 @@ module "web" {
   source              = "../modules/services/web"
   web_instance_count  = "${var.web_instance_count}"
   region              = "${var.region}"
-  instance_type       = "t2.micro"
+  instance_type       = "t2.small"
   private_subnet_id   = "${module.vpc.private_subnet_id}"
   public_subnet_id    = "${module.vpc.public_subnet_id}"
   vpc_sg_id           = "${module.vpc.default_sg_id}"
@@ -30,6 +30,8 @@ module "web" {
   environment         = "${var.environment}"
   vpc_id              = "${module.vpc.vpc_id}"
   vpc_cidr_block      = "${var.vpc_cidr}"
+  public_subdomain    = "${var.public_subdomain}"
+  root_domain         = "${var.root_domain}"
 }
 
 module "ci" {
@@ -43,4 +45,5 @@ module "ci" {
   environment         = "${var.environment}"
   vpc_id              = "${module.vpc.vpc_id}"
   vpc_cidr_block      = "${var.vpc_cidr}"
+
 }

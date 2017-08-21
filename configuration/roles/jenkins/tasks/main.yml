@@ -10,11 +10,12 @@
     state: present  
 
 - name: Install Jenkins
-  apt: name={{item}} state=present
-  with_items:
-    - jenkins
+  apt: 
+    name: jenkins 
+    state: present
 
 - name: Add jenkins to group sudo
-  user: name='jenkins'
-        groups=docker
-        append=yes     
+  user: 
+    name: jenkins
+    groups: docker
+    append: yes     

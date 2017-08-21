@@ -32,3 +32,11 @@ variable "private_subnet_cidr" {
 variable "web_instance_count" {
   description = "The total of web instances to run"
 }
+
+variable "public_subdomain" {
+  description = "Public subdomain"
+}
+
+variable "root_domain" {
+    description = "Root domain"
+}

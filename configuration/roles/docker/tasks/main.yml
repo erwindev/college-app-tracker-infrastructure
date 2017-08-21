@@ -10,9 +10,12 @@
     state: present
 
 - name: Install Docker 
-  apt: name={{item}} state=present force=yes
-  with_items:
-    - docker-ce
+  apt: 
+    name: docker-ce 
+    state: present 
+    force: yes
 
 - name: Start Docker
-  service: name=docker state=restarted
+  service: 
+    name: docker 
+    state: restarted
