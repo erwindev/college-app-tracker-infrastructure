@@ -160,7 +160,6 @@ resource "aws_instance" "web" {
     "${aws_security_group.web_server_sg.id}"
   ]
   key_name          = "${var.key_name}"
-  user_data         = "${file("${path.module}/files/user_data.sh")}"
   tags = {
     Name        = "${var.environment}-web-${count.index+1}"
     Environment = "${var.environment}"
@@ -203,16 +202,18 @@ resource "aws_elb" "web" {
 }
 
 /* College App Tracker Web Site Bucket */
+/*
 resource "aws_s3_bucket" "college-app-tracker-site" {
   bucket = "${var.public_subdomain}.${var.root_domain}"
-
   website {
     index_document = "index.html"
     error_document = "error.html"
   }
 }
+*/
 
 /* College App Tracker CloudFront */
+/*
 resource "aws_cloudfront_distribution" "college-app-tracker-distribution" {
     origin {
         custom_origin_config {
@@ -268,3 +269,4 @@ resource "aws_cloudfront_distribution" "college-app-tracker-distribution" {
         cloudfront_default_certificate = true
     }
 }
+*/

@@ -24,4 +24,7 @@
     state: present
 
 - name: Install npm angular-cli
-  command: "npm install -g @angular/cli"
+  npm: 
+    name: '@angular/cli'
+    global: yes
+    state: present

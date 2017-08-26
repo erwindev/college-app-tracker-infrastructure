@@ -3,10 +3,9 @@ variable "region" {
 }
 
 variable "amis" {
+  description = "Ubuntu 16.04 (python, ansible, node, npm, angular, docker)"
   default = {
-    "us-east-1" = "ami-f652979b"
-    "us-east-2" = "ami-fcc19b99"
-    "us-west-1" = "ami-16efb076"
+    "us-east-1" = "ami-95faf9ee"
   }
 }
 

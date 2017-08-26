@@ -6,3 +6,6 @@
 env.sh
 .DS_Store
 *.retry
+ssh.cfg
+inventory
+config
