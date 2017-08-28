@@ -7,9 +7,6 @@
   become: yes
   
   roles:
-    - wait_for_ssh
-    - base  
-    - jdk 
-    - jenkins    
-    - git
-    - restart
+    - base      
+    - docker 
+    - jenkins-docker

@@ -21,6 +21,7 @@ python config_generator.py $1 ssh_config > config
 cp config ~/.ssh
 
 cd $BASEDIR/configuration
+
 echo "Update CI Software..."
 ansible-playbook -i inventory ci.yml
 

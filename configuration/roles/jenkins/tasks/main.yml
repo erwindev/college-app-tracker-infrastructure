@@ -18,4 +18,30 @@
   user: 
     name: jenkins
     groups: docker
-    append: yes     
+    append: yes   
+
+- name: Copy Jenkins config.xml
+  copy:
+    src: "{{ role_path }}/files/config.xml"
+    dest: /var/lib/jenkins/config.xml
+
+- name: Copy Identity File
+  copy:
+    src: "{{ role_path }}/files/identity.key.enc"
+    dest: /var/lib/jenkins/identity.key.enc 
+
+- name: Copy Jenkins credentials.xml
+  copy:
+    src: "{{ role_path }}/files/credentials.xml"
+    dest: /var/lib/jenkins/credentials.xml  
+
+- name: Create college-app-tracker-jenkins job directory
+  file: path=/var/lib/jenkins/jobs/college-app-tracker-jenkins state=directory mode=0755
+
+- name: Copy college-app-tracker-jenkins job config.xml
+  copy:
+    src: "{{ role_path }}/files/college-app-tracker-jenkins-job.xml"
+    dest: /var/lib/jenkins/jobs/college-app-tracker-jenkins/config.xml  
+
+
+

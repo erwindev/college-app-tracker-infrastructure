@@ -15,6 +15,12 @@
     state: present 
     force: yes
 
+- name: Install Docker Compose
+  apt: 
+    name: docker-compose
+    state: present 
+    force: yes    
+
 - name: Start Docker
   service: 
     name: docker 

@@ -11,7 +11,7 @@ The server infrastructure environment will run in a Virtual Private Cloud (VPC).
 2. Install [Terraform](https://www.terraform.io/downloads.html)
 3. Install [Ansible](http://docs.ansible.com/ansible/latest/intro_installation.html)
 
-## Steps to Setup
+## Steps to Setup Terraform
 1. Install terraform
 2. Add your AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY in your environment variables.
 ```
@@ -25,8 +25,12 @@ $ ssh-keygen -q -f dev_key -C aws_terraform_ssh_key -N ''
 ```
 5. If you are using modules, make sure to invoke `$ terraform get`.
 6. Run `terraform plan` to see what Terraform is going to be applied in your AWS environment. 
-7. Run `terraform apply` to start spinning up your environment.
-8. Login to your AWS Console to see all the resources that were created.
+
+## Create your infrastructure
+This will create your infrastructure in AWS as well as apply the necessary packages in the instances through ansible.
+```
+sh create_infra.sh dev
+```
 
 ## Access the fresh NGINX webserver
 1. Since we installed an ELB in front of the nginx server, we need to get the IP of the ELB server.
@@ -91,5 +95,7 @@ control_path = ~/.ssh/mux-%r@%h:%p
 ```
 4. Run the test_connection playbook.  
 `$ ansible-playbook -i inventory test_connection.yml`
-5. Install packages
-`$ ansible-playbook -i inventory main.yml`
+5. Install packages in the CI Server
+`$ ansible-playbook -i inventory ci.yml`
+6. Install packages in the WebServer Server
+`$ ansible-playbook -i inventory webserver.yml`
