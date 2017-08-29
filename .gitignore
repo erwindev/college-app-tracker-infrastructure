@@ -9,3 +9,4 @@ env.sh
 ssh.cfg
 inventory
 config
+*.pub

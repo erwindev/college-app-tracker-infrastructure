@@ -19,9 +19,9 @@
   apt: 
     name: docker-compose
     state: present 
-    force: yes    
+    force: yes        
 
-- name: Start Docker
-  service: 
-    name: docker 
-    state: restarted
+# - name: Start Docker
+#   service: 
+#     name: docker 
+#     state: restarted

@@ -6,10 +6,29 @@
     owner: 1000
     group: 1000
 
-- name: Copy Jenkins docker-compose file
-  copy:
-    src: "{{ role_path }}/files/docker-compose.yml"
-    dest: /home/ubuntu  
+- name: Install docker-py
+  pip:
+    name: docker-py
+    state: present
 
 - name: Launch ealberto/jenkins Docker container
-  command: "docker-compose up"
+  docker_container:
+    name: jenkins
+    image: ealberto/jenkins:latest
+    state: started
+    restart: yes
+    ports:
+      - "8080:8080"
+    volumes:
+      - /opt/jenkins:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock  
+
+- name: Copy Jenkins config.xml
+  copy:
+    src: "{{ role_path }}/files/config.xml"
+    dest: /opt/jenkins/config.xml
+
+- name: Copy Jenkins credentials.xml
+  copy:
+    src: "{{ role_path }}/files/credentials.xml"
+    dest: /opt/jenkins/credentials.xml        
