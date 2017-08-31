@@ -11,3 +11,11 @@
     - python-pip
     - docker 
     - jenkins-docker
+
+- name: Copy inventory file in Jenkins
+- hosts: ci_servers
+  user: ubuntu
+  tasks:
+  copy:
+    src: "iventory"
+    dest: /home/ubuntu  
