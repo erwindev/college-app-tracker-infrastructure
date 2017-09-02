@@ -1,21 +1,12 @@
 ---
-- name: Setup CI Servers
-  hosts: ci_servers
-  vars: 
-    nodejs_version: 8.x
+- name: Setup CI Master
+  hosts: ci_master
   remote_user: ubuntu
   become: yes
   
   roles:
     - base      
+    - jdk    
     - python-pip
     - docker 
     - jenkins-docker
-
-- name: Copy inventory file in Jenkins
-- hosts: ci_servers
-  user: ubuntu
-  tasks:
-  copy:
-    src: "iventory"
-    dest: /home/ubuntu  

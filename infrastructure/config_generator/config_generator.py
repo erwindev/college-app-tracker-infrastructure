@@ -9,7 +9,8 @@ def inventory(env):
 	with open("../%s/terraform.tfstate" % env) as json_file:
 		json_data = json.load(json_file)
 		bastion = json_data['modules'][0]['outputs']['bastion_instance_ip']['value']
-		ci_servers = '\n'.join(json_data['modules'][0]['outputs']['ci_private_instance_ips']['value'])
+		ci_master_servers = '\n'.join(json_data['modules'][0]['outputs']['ci_master_private_instance_ips']['value'])
+		ci_worker_servers = '\n'.join(json_data['modules'][0]['outputs']['ci_worker_private_instance_ips']['value'])		
 		web_server_list = json_data['modules'][0]['outputs']['web_private_instance_ips']['value']
 		web_servers = '\n'.join(web_server_list)
 		swarm_leader = web_server_list[0]
@@ -17,7 +18,8 @@ def inventory(env):
 
 	inventory_data = {
 						'bastion': bastion, 
-						'ci_servers': ci_servers, 
+						'ci_master_servers': ci_master_servers, 
+						'ci_worker_servers': ci_worker_servers, 						
 						'web_servers': web_servers,
 						'swarm_leader': swarm_leader,
 						'swarm_node': swarm_node

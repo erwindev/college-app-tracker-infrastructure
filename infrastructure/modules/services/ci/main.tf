@@ -83,8 +83,25 @@ resource "aws_security_group" "ci_inbound_sg" {
   }
 }
 
-/* CI servers */
+/* CI master */
 resource "aws_instance" "ci" {
+  count             = "1"
+  ami               = "${lookup(var.amis, var.region)}"
+  instance_type     = "${var.instance_type}"
+  subnet_id         = "${var.private_subnet_id}"
+  vpc_security_group_ids = [
+    "${aws_security_group.ci_sg.id}"
+  ]
+  key_name          = "${var.key_name}"
+  tags = {
+    Name        = "${var.environment}-ci"
+    Environment = "${var.environment}"
+  }
+}
+
+/* CI worker */
+resource "aws_instance" "ci_worker" {
+  count             = "1"
   ami               = "${lookup(var.amis, var.region)}"
   instance_type     = "${var.instance_type}"
   subnet_id         = "${var.private_subnet_id}"

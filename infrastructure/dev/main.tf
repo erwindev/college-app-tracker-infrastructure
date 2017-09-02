@@ -37,7 +37,7 @@ module "web" {
 module "ci" {
   source              = "../modules/services/ci"
   region              = "${var.region}"
-  instance_type       = "t2.small"
+  instance_type       = "t2.micro"
   private_subnet_id   = "${module.vpc.private_subnet_id}"
   public_subnet_id    = "${module.vpc.public_subnet_id}"
   vpc_sg_id           = "${module.vpc.default_sg_id}"

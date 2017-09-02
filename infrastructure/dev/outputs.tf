@@ -10,8 +10,12 @@ output "web_private_instance_ips" {
 	value = "${module.web.private.instance.ips}"
 }
 
-output "ci_private_instance_ips" {
-	value = "${module.ci.private.instance.ips}"
+output "ci_master_private_instance_ips" {
+	value = "${module.ci.master.instance.ips}"
+}
+
+output "ci_worker_private_instance_ips" {
+	value = "${module.ci.worker.instance.ips}"
 }
 
 output "bastion_instance_ip" {

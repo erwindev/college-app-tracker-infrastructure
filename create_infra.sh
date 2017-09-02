@@ -1,5 +1,9 @@
 #!/bin/sh
 
+if [ "$#" -ne 2 ]; then
+    echo "Incorrect number of parameters: usage 'create_infra.sh <env> <config|no-config>"
+fi
+
 # Start AWS Provisioning
 BASEDIR=$(pwd)
 cd $BASEDIR/infrastructure/$1
@@ -20,6 +24,9 @@ cp inventory $BASEDIR/configuration
 echo "Generate ssh config..."
 python config_generator.py $1 ssh_config > config
 cp config ~/.ssh
+
+if [$2 -eq 'no-config' ]; then
+	exit 0
 
 # Sleep for 2 minutes to give AWS a chance to finish provisioning
 sleep 2m

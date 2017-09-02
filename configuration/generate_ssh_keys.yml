@@ -1,5 +1,5 @@
 ---
-- hosts: ci_servers
+- hosts: ci_master
   user: ubuntu
   tasks:
     - name: generate ssh keys
@@ -12,7 +12,7 @@
     - name: fetch public key
       fetch:
         src: ~/.ssh/id_rsa.pub
-        dest: tmp/
+        dest: tmp/master/id_rsa.pub
         flat: yes
 
     - name: create ssh config file
@@ -20,10 +20,45 @@
         content: "StrictHostKeyChecking no"
         dest: "~/.ssh/config"
 
+# For now assume there's only one worker
+- hosts: ci_workers
+  user: ubuntu
+  tasks:
+    - name: generate ssh keys
+      user:
+        name: ubuntu
+        generate_ssh_key: yes
+        ssh_key_bits: 2048
+        ssh_key_file: .ssh/id_rsa
+
+    - name: fetch public key
+      fetch:
+        src: ~/.ssh/id_rsa.pub
+        dest: tmp/worker/id_rsa.pub
+        flat: yes
+
+    - name: create ssh config file
+      copy:
+        content: "StrictHostKeyChecking no"
+        dest: "~/.ssh/config"        
+
 - hosts: web_servers
   remote_user: ubuntu
   tasks:
-    - name: add master public key to slaves
+    - name: add master public key to webservers
       authorized_key:
         user: ubuntu
-        key: "{{ lookup('file', 'tmp/id_rsa.pub') }}"
+        key: "{{ lookup('file', 'tmp/master/id_rsa.pub') }}"
+    - name: add worker public key to webservers
+      authorized_key:
+        user: ubuntu
+        key: "{{ lookup('file', 'tmp/worker/id_rsa.pub') }}"        
+
+# For now assume there's only one worker
+- hosts: ci_workers
+  remote_user: ubuntu
+  tasks:
+    - name: add master public key to workers
+      authorized_key:
+        user: ubuntu
+        key: "{{ lookup('file', 'tmp/master/id_rsa.pub') }}" 

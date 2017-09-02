@@ -1,5 +1,5 @@
 ---
-- name: Update and upgrade apt packages
+- name: Update apt packages
   apt:
-    upgrade: dist
+    update_cache: yes
   become: yes

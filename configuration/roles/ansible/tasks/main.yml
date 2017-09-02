@@ -1,0 +1,15 @@
+---
+- name: Ensure Ansible repo is available
+  apt_repository: 
+    repo: 'ppa:ansible/ansible' 
+    state: present
+
+- name: Update apt packages
+  apt:
+    update_cache: yes
+  become: yes
+
+- name: Install JDK
+  apt: 
+    name: ansible
+    state: present

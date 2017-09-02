@@ -1,0 +1,21 @@
+---
+- name: Setup CI Worker
+  hosts: ci_workers
+  vars: 
+    nodejs_version: 6.x
+  remote_user: ubuntu
+  become: yes
+  
+  roles:
+    - base      
+    - jdk      
+    - python-pip  
+    - docker 
+    - ansible
+    - node
+  
+  post_tasks:
+    - name: Copy inventory file
+      copy: 
+        src: "inventory"
+        dest: /home/ubuntu  
