@@ -29,7 +29,7 @@ $ ssh-keygen -q -f dev_key -C aws_terraform_ssh_key -N ''
 ## Create your infrastructure
 This will create your infrastructure in AWS as well as apply the necessary packages in the instances through ansible.
 ```
-sh create_infra.sh dev
+sh create_infra.sh dev config
 ```
 
 ## Access the fresh NGINX webserver
