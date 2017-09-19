@@ -1,5 +1,5 @@
-variable "web_instance_count" {
-  description = "The total of web instances to run"
+variable "docker_instance_count" {
+  description = "The total of docker instances to run"
 }
 
 variable "region" {

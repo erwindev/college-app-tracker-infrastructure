@@ -9,6 +9,6 @@ public_subnet_cidr  = "10.0.1.0/24"
 private_subnet_cidr = "10.0.2.0/24"
 
 # web
-web_instance_count  = 2
-public_subdomain    = "www"
-root_domain         = "erwindev.com"
+docker_instance_count  = 2
+public_subdomain       = "www"
+root_domain            = "erwindev.com"

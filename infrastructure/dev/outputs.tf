@@ -1,13 +1,13 @@
-output "web_elb_hostname" {
-  value = "${module.web.elb.hostname}"
+output "docker_elb_hostname" {
+  value = "${module.docker.elb.hostname}"
 }
 
 output "ci_elb_hostname" {
   value = "${module.ci.elb.hostname}"
 }
 
-output "web_private_instance_ips" {
-	value = "${module.web.private.instance.ips}"
+output "docker_private_instance_ips" {
+	value = "${module.docker.private.instance.ips}"
 }
 
 output "ci_master_private_instance_ips" {

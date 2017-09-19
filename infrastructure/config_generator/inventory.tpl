@@ -1,8 +1,8 @@
 [bastion]
 $bastion
 
-[web_servers]
-$web_servers
+[docker_servers]
+$docker_servers
 
 [ci_master]
 $ci_master_servers

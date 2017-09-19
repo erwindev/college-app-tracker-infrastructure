@@ -29,8 +29,8 @@ variable "private_subnet_cidr" {
 }
 
 # Web
-variable "web_instance_count" {
-  description = "The total of web instances to run"
+variable "docker_instance_count" {
+  description = "The total of docker server instances to run"
 }
 
 variable "public_subdomain" {

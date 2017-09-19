@@ -11,16 +11,16 @@ def inventory(env):
 		bastion = json_data['modules'][0]['outputs']['bastion_instance_ip']['value']
 		ci_master_servers = '\n'.join(json_data['modules'][0]['outputs']['ci_master_private_instance_ips']['value'])
 		ci_worker_servers = '\n'.join(json_data['modules'][0]['outputs']['ci_worker_private_instance_ips']['value'])		
-		web_server_list = json_data['modules'][0]['outputs']['web_private_instance_ips']['value']
-		web_servers = '\n'.join(web_server_list)
-		swarm_leader = web_server_list[0]
-		swarm_node = '\n'.join(web_server_list[1:])	
+		docker_server_list = json_data['modules'][0]['outputs']['docker_private_instance_ips']['value']
+		docker_servers = '\n'.join(docker_server_list)
+		swarm_leader = docker_server_list[0]
+		swarm_node = '\n'.join(docker_server_list[1:])	
 
 	inventory_data = {
 						'bastion': bastion, 
 						'ci_master_servers': ci_master_servers, 
 						'ci_worker_servers': ci_worker_servers, 						
-						'web_servers': web_servers,
+						'docker_servers': docker_servers,
 						'swarm_leader': swarm_leader,
 						'swarm_node': swarm_node
 					}	

@@ -1,7 +1,7 @@
-/* Security group for the web */
-resource "aws_security_group" "web_server_sg" {
-  name        = "${var.environment}-web-server-sg"
-  description = "Security group for web that allows http(s), ssh and swarm traffic"
+/* Security group for the docker */
+resource "aws_security_group" "docker_server_sg" {
+  name        = "${var.environment}-docker-server-sg"
+  description = "Security group for docker that allows http(s), ssh and swarm traffic"
   vpc_id      = "${var.vpc_id}"
 
   ingress {
@@ -86,13 +86,13 @@ resource "aws_security_group" "web_server_sg" {
   }
 
   tags {
-    Name        = "${var.environment}-web-server-sg"
+    Name        = "${var.environment}-docker-server-sg"
     Environment = "${var.environment}"
   }
 }
 
-resource "aws_security_group" "web_inbound_sg" {
-  name        = "${var.environment}-web-inbound-sg"
+resource "aws_security_group" "docker_inbound_sg" {
+  name        = "${var.environment}-docker-inbound-sg"
   description = "Allow ssh, http, swarm traffic from Anywhere"
   vpc_id      = "${var.vpc_id}"
 
@@ -146,31 +146,31 @@ resource "aws_security_group" "web_inbound_sg" {
   }
 
   tags {
-    Name = "${var.environment}-web-inbound-sg"
+    Name = "${var.environment}-docker-inbound-sg"
   }
 }
 
-/* Web servers */
-resource "aws_instance" "web" {
-  count             = "${var.web_instance_count}"
+/* docker servers */
+resource "aws_instance" "docker" {
+  count             = "${var.docker_instance_count}"
   ami               = "${lookup(var.amis, var.region)}"
   instance_type     = "${var.instance_type}"
   subnet_id         = "${var.private_subnet_id}"
   vpc_security_group_ids = [
-    "${aws_security_group.web_server_sg.id}"
+    "${aws_security_group.docker_server_sg.id}"
   ]
   key_name          = "${var.key_name}"
   tags = {
-    Name        = "${var.environment}-web-${count.index+1}"
+    Name        = "${var.environment}-docker-${count.index+1}"
     Environment = "${var.environment}"
   }
 }
 
 /* Load Balancer */
-resource "aws_elb" "web" {
-  name            = "${var.environment}-web-lb"
+resource "aws_elb" "docker" {
+  name            = "${var.environment}-docker-lb"
   subnets         = ["${var.public_subnet_id}"]
-  security_groups = ["${aws_security_group.web_inbound_sg.id}"]
+  security_groups = ["${aws_security_group.docker_inbound_sg.id}"]
 
   listener {
     instance_port     = 80
@@ -186,7 +186,7 @@ resource "aws_elb" "web" {
     lb_protocol       = "http"
   }
 
-  instances = ["${aws_instance.web.*.id}"]
+  instances = ["${aws_instance.docker.*.id}"]
 
   health_check {
     healthy_threshold   = 3
@@ -201,7 +201,7 @@ resource "aws_elb" "web" {
   }
 }
 
-/* College App Tracker Web Site Bucket */
+/* College App Tracker docker Site Bucket */
 resource "aws_s3_bucket" "college-app-tracker-site" {
   bucket = "${var.public_subdomain}.${var.root_domain}"
   website {
