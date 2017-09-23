@@ -94,7 +94,7 @@ resource "aws_instance" "ci" {
   ]
   key_name          = "${var.key_name}"
   tags = {
-    Name        = "${var.environment}-ci"
+    Name        = "${var.environment}-ci-${count.index+1}"
     Environment = "${var.environment}"
   }
 }
