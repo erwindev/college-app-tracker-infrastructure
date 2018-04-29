@@ -1,0 +1,12 @@
+---
+- name: Setup CI Master
+  hosts: ci_master
+  remote_user: ubuntu
+  become: yes
+  
+  roles:
+    - base      
+    - jdk    
+    - python-pip
+    - docker 
+    - jenkins-docker

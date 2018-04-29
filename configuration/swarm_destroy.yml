@@ -1,0 +1,8 @@
+---
+- name: Destroy Swarm Nodes
+  hosts: swarm_leader:swarm_node
+  remote_user: ubuntu
+  gather_facts: yes
+  become: yes
+  tasks:
+    - command: "docker swarm leave --force"

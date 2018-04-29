@@ -1,0 +1,19 @@
+---
+- name: Setup Docker Swarm Leader
+  hosts: swarm_leader
+  remote_user: ubuntu
+  gather_facts: yes
+  become: yes
+  tasks:
+    - command: "docker swarm init --advertise-addr {{inventory_hostname}}"
+    - command: "docker swarm join-token -q worker"
+      register: swarm_token
+    - set_fact: swarmtoken="{{swarm_token.stdout}}"
+
+- name: Join Swarm Nodes
+  hosts: swarm_node
+  remote_user: ubuntu
+  gather_facts: yes
+  become: yes
+  tasks:
+    - command: "docker swarm join --token {{hostvars[groups['swarm_leader'][0]].swarmtoken}} {{hostvars[groups['swarm_leader'][0]].inventory_hostname}}:2377"  

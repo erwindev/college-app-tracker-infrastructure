@@ -3,5 +3,11 @@
 *.tfstate.backup
 *_key
 *_key.pub
-aws.sh
+env.sh
+.DS_Store
+*.retry
+ssh.cfg
+inventory
+config
+*.pub
 .DS_Store
