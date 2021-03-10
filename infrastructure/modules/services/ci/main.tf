@@ -2,27 +2,27 @@
 resource "aws_security_group" "ci_sg" {
   name        = "${var.environment}-ci-server-sg"
   description = "Security group for CI that allows traffic"
-  vpc_id      = "${var.vpc_id}"
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port = 22
     to_port   = 22
     protocol  = "tcp"
-    cidr_blocks = ["${var.vpc_cidr_block}"]
+    cidr_blocks = [var.vpc_cidr_block]
   }
 
   ingress {
     from_port = 80
     to_port   = 80
     protocol  = "tcp"
-    cidr_blocks = ["${var.vpc_cidr_block}"]
+    cidr_blocks = [var.vpc_cidr_block]
   }
 
   ingress {
     from_port = 8080
     to_port   = 8080
     protocol  = "tcp"
-    cidr_blocks = ["${var.vpc_cidr_block}"]
+    cidr_blocks = [var.vpc_cidr_block]
   }  
 
   egress {
@@ -39,16 +39,16 @@ resource "aws_security_group" "ci_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags {
+  tags = {
     Name        = "${var.environment}-ci-server-sg"
-    Environment = "${var.environment}"
+    Environment = var.environment
   }
 }
 
 resource "aws_security_group" "ci_inbound_sg" {
   name        = "${var.environment}-ci-inbound-sg"
   description = "Allow HTTP and ssh from Anywhere"
-  vpc_id      = "${var.vpc_id}"
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port   = 80
@@ -78,7 +78,7 @@ resource "aws_security_group" "ci_inbound_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags {
+  tags = {
     Name = "${var.environment}-ci-inbound-sg"
   }
 }
@@ -86,40 +86,40 @@ resource "aws_security_group" "ci_inbound_sg" {
 /* CI master */
 resource "aws_instance" "ci" {
   count             = "1"
-  ami               = "${lookup(var.amis, var.region)}"
-  instance_type     = "${var.instance_type}"
-  subnet_id         = "${var.private_subnet_id}"
+  ami               = lookup(var.amis, var.region)
+  instance_type     = var.instance_type
+  subnet_id         = var.private_subnet_id
   vpc_security_group_ids = [
-    "${aws_security_group.ci_sg.id}"
+    aws_security_group.ci_sg.id
   ]
-  key_name          = "${var.key_name}"
+  key_name          = var.key_name
   tags = {
     Name        = "${var.environment}-ci-${count.index+1}"
-    Environment = "${var.environment}"
+    Environment = var.environment
   }
 }
 
 /* CI worker */
 resource "aws_instance" "ci_worker" {
   count             = "1"
-  ami               = "${lookup(var.amis, var.region)}"
-  instance_type     = "${var.instance_type}"
-  subnet_id         = "${var.private_subnet_id}"
+  ami               = lookup(var.amis, var.region)
+  instance_type     = var.instance_type
+  subnet_id         = var.private_subnet_id
   vpc_security_group_ids = [
-    "${aws_security_group.ci_sg.id}"
+    aws_security_group.ci_sg.id
   ]
-  key_name          = "${var.key_name}"
+  key_name          = var.key_name
   tags = {
     Name        = "${var.environment}-ci"
-    Environment = "${var.environment}"
+    Environment = var.environment
   }
 }
 
 /* Load Balancer */
 resource "aws_elb" "ci" {
   name            = "${var.environment}-ci-lb"
-  subnets         = ["${var.public_subnet_id}"]
-  security_groups = ["${aws_security_group.ci_inbound_sg.id}"]
+  subnets         = [var.public_subnet_id]
+  security_groups = [aws_security_group.ci_inbound_sg.id]
 
   listener {
     instance_port     = 8080
@@ -127,7 +127,7 @@ resource "aws_elb" "ci" {
     lb_port           = 8080
     lb_protocol       = "http"
   }
-  instances = ["${aws_instance.ci.id}"]
+  instances = [aws_instance.ci[0].id]
 
   health_check {
     healthy_threshold   = 3
@@ -137,7 +137,7 @@ resource "aws_elb" "ci" {
     interval            = 10
   }  
 
-  tags {
-    Environment = "${var.environment}"
+  tags = {
+    Environment = var.environment
   }
 }

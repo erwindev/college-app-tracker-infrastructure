@@ -2,34 +2,34 @@
 resource "aws_security_group" "docker_server_sg" {
   name        = "${var.environment}-docker-server-sg"
   description = "Security group for docker that allows http(s), ssh and swarm traffic"
-  vpc_id      = "${var.vpc_id}"
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port = 22
     to_port   = 22
     protocol  = "tcp"
-    cidr_blocks = ["${var.vpc_cidr_block}"]
+    cidr_blocks = [var.vpc_cidr_block]
   }
 
   ingress {
     from_port = 80
     to_port   = 80
     protocol  = "tcp"
-    cidr_blocks = ["${var.vpc_cidr_block}"]
+    cidr_blocks = [var.vpc_cidr_block]
   }
 
   ingress {
     from_port = 8080
     to_port   = 8080
     protocol  = "tcp"
-    cidr_blocks = ["${var.vpc_cidr_block}"]
+    cidr_blocks = [var.vpc_cidr_block]
   }  
 
   ingress {
     from_port = 443
     to_port   = 443
     protocol  = "tcp"
-    cidr_blocks = ["${var.vpc_cidr_block}"]
+    cidr_blocks = [var.vpc_cidr_block]
   }  
 
   ingress {
@@ -85,16 +85,16 @@ resource "aws_security_group" "docker_server_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags {
+  tags = {
     Name        = "${var.environment}-docker-server-sg"
-    Environment = "${var.environment}"
+    Environment = var.environment
   }
 }
 
 resource "aws_security_group" "docker_inbound_sg" {
   name        = "${var.environment}-docker-inbound-sg"
   description = "Allow ssh, http, swarm traffic from Anywhere"
-  vpc_id      = "${var.vpc_id}"
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port   = 80
@@ -145,32 +145,32 @@ resource "aws_security_group" "docker_inbound_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags {
+  tags = {
     Name = "${var.environment}-docker-inbound-sg"
   }
 }
 
 /* docker servers */
 resource "aws_instance" "docker" {
-  count             = "${var.docker_instance_count}"
-  ami               = "${lookup(var.amis, var.region)}"
-  instance_type     = "${var.instance_type}"
-  subnet_id         = "${var.private_subnet_id}"
+  count             = var.docker_instance_count
+  ami               = lookup(var.amis, var.region)
+  instance_type     = var.instance_type
+  subnet_id         = var.private_subnet_id
   vpc_security_group_ids = [
-    "${aws_security_group.docker_server_sg.id}"
+    aws_security_group.docker_server_sg.id
   ]
-  key_name          = "${var.key_name}"
+  key_name          = var.key_name
   tags = {
-    Name        = "${var.environment}-docker-${count.index+1}"
-    Environment = "${var.environment}"
+    Name        = "${var.environment}-docker-{count.index+1}"
+    Environment = var.environment
   }
 }
 
 /* Load Balancer */
 resource "aws_elb" "docker" {
   name            = "${var.environment}-docker-lb"
-  subnets         = ["${var.public_subnet_id}"]
-  security_groups = ["${aws_security_group.docker_inbound_sg.id}"]
+  subnets         = [var.public_subnet_id]
+  security_groups = [aws_security_group.docker_inbound_sg.id]
 
   listener {
     instance_port     = 80
@@ -186,7 +186,7 @@ resource "aws_elb" "docker" {
     lb_protocol       = "http"
   }
 
-  instances = ["${aws_instance.docker.*.id}"]
+  instances = [aws_instance.docker[0].id, aws_instance.docker[1].id]
 
   health_check {
     healthy_threshold   = 3
@@ -196,8 +196,8 @@ resource "aws_elb" "docker" {
     interval            = 10
   }    
 
-  tags {
-    Environment = "${var.environment}"
+  tags = {
+    Environment = var.environment
   }
 }
 
@@ -214,13 +214,13 @@ resource "aws_s3_bucket" "college-app-tracker-site" {
 resource "aws_cloudfront_distribution" "college-app-tracker-distribution" {
     origin {
         custom_origin_config {
-            http_port = 80,
-            https_port = 443,
-            origin_protocol_policy = "http-only",
+            http_port = 80
+            https_port = 443
+            origin_protocol_policy = "http-only"
             origin_ssl_protocols = ["SSLv3", "TLSv1", "TLSv1.1", "TLSv1.2"]
         }
-        domain_name = "${aws_s3_bucket.college-app-tracker-site.bucket_domain_name}"
-        origin_id   = "${aws_s3_bucket.college-app-tracker-site.id}"
+        domain_name = aws_s3_bucket.college-app-tracker-site.bucket_domain_name
+        origin_id   = aws_s3_bucket.college-app-tracker-site.id
     }
 
     enabled = true
@@ -238,7 +238,7 @@ resource "aws_cloudfront_distribution" "college-app-tracker-distribution" {
     default_cache_behavior {
         allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
         cached_methods   = ["GET", "HEAD"]
-        target_origin_id = "${aws_s3_bucket.college-app-tracker-site.id}"
+        target_origin_id = aws_s3_bucket.college-app-tracker-site.id
 
         forwarded_values {
           query_string = false
