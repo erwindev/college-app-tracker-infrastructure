@@ -11,3 +11,4 @@ inventory
 config
 *.pub
 .DS_Store
+.terraform.lock.hcl
